@@ -24,18 +24,6 @@ async def async_setup_entry(
     """Set up the sensor platform."""
     new_entities = []
 
-    async def handle_failed_auth(config: ConfigEntry, hass: HomeAssistant) -> None:
-        glow_auth = await hass.async_add_executor_job(
-            Glow.authenticate, APP_ID, config.data["username"], config.data["password"],
-        )
-
-        current_config = dict(config.data.copy())
-        new_config = config_object(current_config, glow_auth)
-        hass.config_entries.async_update_entry(entry=config, data=new_config)
-
-        glow = Glow(APP_ID, glow_auth["token"])
-        hass.data[DOMAIN][config.entry_id] = glow
-
     for entry in hass.data[DOMAIN]:
         glow = hass.data[DOMAIN][entry]
 
